@@ -1,3 +1,44 @@
-<p>
-  user-list works!
-</p>
+<ngx-ui-loader></ngx-ui-loader>
+<div class="ui segment wrapper container">
+  <div class="header-section">
+    <div class="four wide column">
+      <div class="ui mini icon input">
+        <input type="text" placeholder="Search name..." name="searchText" [(ngModel)]="searchText"
+          (keyup)="onSearchStringChange($event)">
+        <i class="search icon"></i>
+      </div>
+    </div>
+  </div>
+  <div class="ui clearing divider"></div>
+  <span *ngIf="filteredUserList.length">Total Results : {{totalCount}}</span>
+  <div class="ui cards">
+    <div class="card card-container" *ngFor="let user of filteredUserList">
+      <div class="content">
+        <img class="left floated ui tiny circular image" src="{{user.avatar_url}}">
+        <div class="header">
+          {{user.login}}
+        </div>
+        <div class="meta">
+          Profile Url : {{user.url}} <br>
+          Organization Url : {{user.organizations_url}}<br>
+          <button class="ui primary basic button right floated"
+            (click)="onUserDetailsClick(user.id)">{{user.btnValue}}</button><br>
+          <table *ngIf="user.isShowUserRepoDetail && user.repositoryList && user.repositoryList.length"
+            class="ui celled striped table">
+            <tbody>
+              <tr *ngFor="let repo of user.repositoryList">
+                <td>{{repo.name}}</td>
+                <td>{{repo.language}}</td>
+                <td>{{repo.open_issues_count}}</td>
+                <td>{{repo.watchers_count}}</td>
+                <td>{{repo.stargazers_count}}</td>
+                <td>{{repo.forks_count}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <span *ngIf="filteredUserList.length ===0">0 Records Found.</span>
+  </div>
+</div>

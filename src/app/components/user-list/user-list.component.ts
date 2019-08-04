@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from 'src/app/services/user.service';
+
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { IUserListDTO } from 'src/app/interfaces/user-list-dto';
+import { IUserRepoDetailDTO } from 'src/app/interfaces/user-repo-detail-dto';
 
 @Component({
   selector: 'app-user-list',
@@ -6,10 +11,74 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
+  
+  filteredUserList: IUserListDTO[] = [];
+  isShowUserDetails = false;
+  searchText: string;
+  totalCount: number;
+  userList: IUserListDTO[] = [];
 
-  constructor() { }
+  constructor(private userService: UserService, private ngxService: NgxUiLoaderService) {
+  }
 
   ngOnInit() {
   }
 
+  getUserList(searchString: string) {
+    this.userService.getUserListByName(searchString).subscribe((data) => {
+      let respData: any = data;
+      if (respData && respData.items && respData.items.length) {
+        this.ngxService.stop();
+        this.userList = respData.items;
+        this.setInitialValue();
+        this.totalCount = this.userList.length;
+        this.filteredUserList = this.userList.slice(0, 10);
+      }
+    });
+  }
+
+  setInitialValue() {
+    this.userList.forEach(element => {
+      element.btnValue = "Details";
+      element.isShowUserRepoDetail = false;
+    });
+  }
+  
+  onUserDetailsClick = (selectedUserId: number) => {
+    this.filteredUserList.forEach(element => {
+      if (element.id === selectedUserId) {
+        element.isShowUserRepoDetail = !element.isShowUserRepoDetail;
+        if (element.isShowUserRepoDetail) {
+          element.btnValue = "Collapse";
+          this.ngxService.start();
+          this.getUserDetails(selectedUserId, element.login);
+        } else {
+          this.setInitialValue();
+        }
+      }
+    });
+  }
+
+  getUserDetails(selectedUserId: number, userName: string) {
+    this.userService.getUserDetailByName(userName).subscribe((data) => {
+      const respData: any = data;
+      if (respData && respData.length) {
+        this.setUserDetails(selectedUserId, respData);
+        this.ngxService.stop();
+      }
+    });
+  }
+
+  setUserDetails(selectedUserId: number, repositoryList: IUserRepoDetailDTO[]) {
+    this.filteredUserList.forEach(element => {
+      if (element.id === selectedUserId) {
+        element.repositoryList = repositoryList;
+      }
+    });
+  }
+
+  onSearchStringChange(event) {
+    this.ngxService.start();
+    this.getUserList(this.searchText);
+  }
 }

@@ -1,6 +1,6 @@
 .card-container {
-    min-width: 50%;
+    min-width: 100%;
 }
 .wrapper {
-    width: 50%;
+    width: 50% !important;
 }

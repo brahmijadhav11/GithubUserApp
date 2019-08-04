@@ -4,6 +4,8 @@ import { UserService } from 'src/app/services/user.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { IUserListDTO } from 'src/app/interfaces/user-list-dto';
 import { IUserRepoDetailDTO } from 'src/app/interfaces/user-repo-detail-dto';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+
 
 @Component({
   selector: 'app-user-list',
@@ -16,6 +18,7 @@ export class UserListComponent implements OnInit {
   isShowUserDetails = false;
   searchText: string;
   totalCount: number;
+  totalResult: number;
   userList: IUserListDTO[] = [];
 
   constructor(private userService: UserService, private ngxService: NgxUiLoaderService) {
@@ -29,6 +32,7 @@ export class UserListComponent implements OnInit {
       let respData: any = data;
       if (respData && respData.items && respData.items.length) {
         this.ngxService.stop();
+        this.totalResult = respData.total_count;
         this.userList = respData.items;
         this.setInitialValue();
         this.totalCount = this.userList.length;
@@ -80,5 +84,11 @@ export class UserListComponent implements OnInit {
   onSearchStringChange(event) {
     this.ngxService.start();
     this.getUserList(this.searchText);
+  }
+
+  pageChanged(event: PageChangedEvent): void {
+    const startItem = (event.page - 1) * event.itemsPerPage;
+    const endItem = event.page * event.itemsPerPage;
+    this.filteredUserList = this.userList.slice(startItem, endItem);
   }
 }

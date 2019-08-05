@@ -25,6 +25,7 @@
             "styles": [
               "semantic/dist/semantic.min.css",
               "src/styles.css",
+              "node_modules/font-awesome/css/font-awesome.css" 
             ],
             "scripts": [
               "semantic/dist/semantic.min.js"

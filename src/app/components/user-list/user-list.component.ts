@@ -59,7 +59,8 @@ export class UserListComponent implements OnInit {
           this.ngxService.start();
           this.getUserDetails(selectedUserId, element.login);
         } else {
-          this.setInitialValue();
+          element.btnValue = "Details";
+          element.isShowUserRepoDetail = false;
         }
       }
     });

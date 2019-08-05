@@ -2,6 +2,13 @@
 <div class="ui segment wrapper container">
   <div class="header-section">
     <div class="four wide column">
+      <select class="sort-dropdown" name="sort" [(ngModel)]="sortvalue" (change)="changeSortOption($event)">
+        <option selected value="">Select</option>
+        <option value="nameAsc">Name [A-Z]</option>
+        <option value="nameDesc">Name [Z-A]</option>
+        <option value="rankAsc">Rank [Asc]</option>
+        <option value="rankDesc">Rank [Desc]</option>
+      </select>
       <div class="ui mini icon input">
         <input type="text" placeholder="Search name..." name="searchName" [(ngModel)]="searchText"
           (keyup)="onSearchStringChange($event)">
@@ -41,7 +48,7 @@
     <span *ngIf="filteredUserList.length ===0">0 Records Found.</span>
   </div>
   <br>
-  <div *ngIf="filteredUserList.length"class="container">
-  <pagination [directionLinks]="true" [totalItems]="totalCount" (pageChanged)="pageChanged($event)"></pagination>
+  <div *ngIf="filteredUserList.length" class="container">
+    <pagination [directionLinks]="true" [totalItems]="totalCount" (pageChanged)="pageChanged($event)"></pagination>
   </div>
 </div>

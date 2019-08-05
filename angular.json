@@ -24,7 +24,7 @@
             ],
             "styles": [
               "semantic/dist/semantic.min.css",
-              "src/styles.css"
+              "src/styles.css",
             ],
             "scripts": [
               "semantic/dist/semantic.min.js"

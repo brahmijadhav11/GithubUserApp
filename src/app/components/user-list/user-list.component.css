@@ -3,4 +3,21 @@
 }
 .wrapper {
     width: 50% !important;
+    background-color: lightgray;
 }
+.sort-dropdown{
+    border: 1px solid rgba(34,36,38,.15) !important;
+    height: 28px !important;
+    width: 163px !important;
+    border-color: ligth green !important;
+    margin-right: 79px !important;
+
+}
+
+.header-section{
+    text-align: center;
+}
+h5{
+    font-family: Lato sans-serif !important;
+}
+

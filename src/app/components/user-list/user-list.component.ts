@@ -5,6 +5,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { IUserListDTO } from 'src/app/interfaces/user-list-dto';
 import { IUserRepoDetailDTO } from 'src/app/interfaces/user-repo-detail-dto';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import * as _ from "lodash";
 
 
 @Component({
@@ -13,10 +14,11 @@ import { PageChangedEvent } from 'ngx-bootstrap/pagination';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-  
+
   filteredUserList: IUserListDTO[] = [];
   isShowUserDetails = false;
   searchText: string;
+  sortvalue = "";
   totalCount: number;
   totalResult: number;
   userList: IUserListDTO[] = [];
@@ -47,7 +49,7 @@ export class UserListComponent implements OnInit {
       element.isShowUserRepoDetail = false;
     });
   }
-  
+
   onUserDetailsClick = (selectedUserId: number) => {
     this.filteredUserList.forEach(element => {
       if (element.id === selectedUserId) {
@@ -90,5 +92,19 @@ export class UserListComponent implements OnInit {
     const startItem = (event.page - 1) * event.itemsPerPage;
     const endItem = event.page * event.itemsPerPage;
     this.filteredUserList = this.userList.slice(startItem, endItem);
+  }
+
+  changeSortOption(event) {
+    if (this.filteredUserList.length && this.sortvalue && this.sortvalue !== '') {
+      if (this.sortvalue === 'nameAsc') {
+        this.filteredUserList = _.orderBy(this.userList, 'login', 'asc');
+      } else if (this.sortvalue === 'nameDesc') {
+        this.filteredUserList = _.orderBy(this.userList, 'login', 'desc');
+      } else if (this.sortvalue === 'rankAsc') {
+        this.filteredUserList = _.orderBy(this.userList, 'score', 'asc');
+      } else if (this.sortvalue === 'rankDesc') {
+        this.filteredUserList = _.orderBy(this.userList, 'score', 'desc');
+      }
+    }
   }
 }

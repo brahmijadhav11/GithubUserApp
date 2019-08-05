@@ -5,7 +5,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { IUserListDTO } from 'src/app/interfaces/user-list-dto';
 import { IUserRepoDetailDTO } from 'src/app/interfaces/user-repo-detail-dto';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
-import * as _ from "lodash";
+import * as _ from 'lodash';
 
 
 @Component({
@@ -13,20 +13,17 @@ import * as _ from "lodash";
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent {
 
   filteredUserList: IUserListDTO[] = [];
   isShowUserDetails = false;
   searchText: string;
-  sortvalue = "";
+  sortOptionValue = '';
   totalCount: number;
   totalResult: number;
   userList: IUserListDTO[] = [];
 
   constructor(private userService: UserService, private ngxService: NgxUiLoaderService) {
-  }
-
-  ngOnInit() {
   }
 
   getUserList(searchString: string) {
@@ -45,38 +42,38 @@ export class UserListComponent implements OnInit {
 
   setInitialValue() {
     this.userList.forEach(element => {
-      element.btnValue = "Details";
+      element.btnValue = 'Details';
       element.isShowUserRepoDetail = false;
     });
   }
 
-  onUserDetailsClick = (selectedUserId: number) => {
+  onUserDetailsBtnClick(selectedUserId: number) {
     this.filteredUserList.forEach(element => {
       if (element.id === selectedUserId) {
         element.isShowUserRepoDetail = !element.isShowUserRepoDetail;
         if (element.isShowUserRepoDetail) {
-          element.btnValue = "Collapse";
+          element.btnValue = 'Collapse';
           this.ngxService.start();
-          this.getUserDetails(selectedUserId, element.login);
+          this.getUserDetail(selectedUserId, element.login);
         } else {
-          element.btnValue = "Details";
+          element.btnValue = 'Details';
           element.isShowUserRepoDetail = false;
         }
       }
     });
   }
 
-  getUserDetails(selectedUserId: number, userName: string) {
+  getUserDetail(selectedUserId: number, userName: string) {
     this.userService.getUserDetailByName(userName).subscribe((data) => {
       const respData: any = data;
       if (respData && respData.length) {
-        this.setUserDetails(selectedUserId, respData);
+        this.setUserDetail(selectedUserId, respData);
         this.ngxService.stop();
       }
     });
   }
 
-  setUserDetails(selectedUserId: number, repositoryList: IUserRepoDetailDTO[]) {
+  setUserDetail(selectedUserId: number, repositoryList: IUserRepoDetailDTO[]) {
     this.filteredUserList.forEach(element => {
       if (element.id === selectedUserId) {
         element.repositoryList = repositoryList;
@@ -84,26 +81,26 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  onSearchStringChange(event) {
+  onSearchStringChange(event: any) {
     this.ngxService.start();
     this.getUserList(this.searchText);
   }
 
-  pageChanged(event: PageChangedEvent): void {
+  onPageChange(event: PageChangedEvent): void {
     const startItem = (event.page - 1) * event.itemsPerPage;
     const endItem = event.page * event.itemsPerPage;
     this.filteredUserList = this.userList.slice(startItem, endItem);
   }
 
-  changeSortOption(event) {
-    if (this.filteredUserList.length && this.sortvalue && this.sortvalue !== '') {
-      if (this.sortvalue === 'nameAsc') {
+  onSortOptionChange(event: any) {
+    if (this.filteredUserList.length && this.sortOptionValue && this.sortOptionValue !== '') {
+      if (this.sortOptionValue === 'nameAsc') {
         this.filteredUserList = _.orderBy(this.userList, 'login', 'asc');
-      } else if (this.sortvalue === 'nameDesc') {
+      } else if (this.sortOptionValue === 'nameDesc') {
         this.filteredUserList = _.orderBy(this.userList, 'login', 'desc');
-      } else if (this.sortvalue === 'rankAsc') {
+      } else if (this.sortOptionValue === 'rankAsc') {
         this.filteredUserList = _.orderBy(this.userList, 'score', 'asc');
-      } else if (this.sortvalue === 'rankDesc') {
+      } else if (this.sortOptionValue === 'rankDesc') {
         this.filteredUserList = _.orderBy(this.userList, 'score', 'desc');
       }
     }

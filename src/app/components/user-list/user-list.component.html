@@ -2,7 +2,7 @@
 <div class="ui segment wrapper container">
   <div class="header-section">
     <div class="four wide column">
-      <select class="sort-dropdown" name="sort" [(ngModel)]="sortvalue" (change)="changeSortOption($event)">
+      <select class="sort-dropdown" name="sort" [(ngModel)]="sortOptionValue" (change)="onSortOptionChange($event)">
         <option selected value="">Select</option>
         <option value="nameAsc">Name [A-Z]</option>
         <option value="nameDesc">Name [Z-A]</option>
@@ -28,7 +28,7 @@
         <div class="meta">
           <h5>Profile Url : {{user.url}}<br>Organization Url : {{user.organizations_url}}</h5>
           <button class="ui primary basic button right floated"
-            (click)="onUserDetailsClick(user.id)">{{user.btnValue}}</button><br>
+            (click)="onUserDetailsBtnClick(user.id)">{{user.btnValue}}</button><br>
           <table *ngIf="user.isShowUserRepoDetail && user.repositoryList && user.repositoryList.length"
             class="ui celled striped table">
             <tbody>
@@ -49,6 +49,6 @@
   </div>
   <br>
   <div *ngIf="filteredUserList.length" class="container">
-    <pagination [directionLinks]="true" [totalItems]="totalCount" (pageChanged)="pageChanged($event)"></pagination>
+    <pagination [directionLinks]="true" [totalItems]="totalCount" (pageChanged)="onPageChange($event)"></pagination>
   </div>
 </div>
